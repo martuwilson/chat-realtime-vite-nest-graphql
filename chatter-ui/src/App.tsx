@@ -1,6 +1,7 @@
 
 import { Container, createTheme, CssBaseline, ThemeProvider } from '@mui/material'
 import './App.css'
+import Auth from './components/auth/Auth'
 
 const darkTheme = createTheme({
   palette: {
@@ -22,6 +23,7 @@ function App() {
         <h1>Welcome to Chatter UI</h1>
         <p>This is a simple chat application interface.</p>
         {/* Additional components can be added here */}
+        <Auth />
       </Container>
     </ThemeProvider>
   )
