@@ -40,3 +40,8 @@ coverage/
 # Cache de herramientas
 .eslintcache
 .stylelintcache
+
+# Docker
+.docker/
+docker-compose.override.yml
+.env.docker

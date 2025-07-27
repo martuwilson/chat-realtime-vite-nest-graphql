@@ -1,8 +1,25 @@
 {
+  "name": "realtime-chat-app",
+  "version": "1.0.0",
+  "description": "Aplicación de chat en tiempo real with React + NestJS + MongoDB",
+  "scripts": {
+    "db:up": "docker-compose up -d mongodb",
+    "db:down": "docker-compose down",
+    "db:restart": "docker-compose restart mongodb",
+    "db:logs": "docker-compose logs -f mongodb",
+    "db:admin": "docker-compose up -d mongo-express",
+    "dev:ui": "cd chatter-ui && npm run dev",
+    "dev:api": "cd chatter-backend && npm run start:dev",
+    "dev": "concurrently \"npm run db:up\" \"npm run dev:api\" \"npm run dev:ui\"",
+    "install:all": "npm install && cd chatter-ui && npm install && cd ../chatter-backend && npm install"
+  },
   "dependencies": {
     "localforage": "^1.10.0",
     "match-sorter": "^8.1.0",
     "react-router-dom": "^7.7.1",
     "sort-by": "^0.0.2"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
   }
 }
