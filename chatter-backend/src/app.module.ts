@@ -6,6 +6,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { DatabaseModule } from './common/database/database.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { UsersModule } from './users/users.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -35,6 +36,7 @@ import * as Joi from 'joi';
       }),
       inject: [ConfigService],
     }),
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],
