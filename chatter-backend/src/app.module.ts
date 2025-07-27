@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AppResolver } from './app.resolver';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { MongooseModule } from '@nestjs/mongoose';
+import { DatabaseModule } from './common/database/database.module';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import * as Joi from 'joi';
 
 @Module({
@@ -20,15 +23,20 @@ import * as Joi from 'joi';
         LOG_LEVEL: Joi.string().valid('error', 'warn', 'info', 'debug').default('info'),
       })
     }),
-    MongooseModule.forRootAsync({
+    DatabaseModule,
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
+      driver: ApolloDriver,
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>('MONGODB_URI'),
+        autoSchemaFile: true, // Genera automáticamente el schema GraphQL
+        playground: configService.get<boolean>('GRAPHQL_PLAYGROUND'),
+        introspection: configService.get<boolean>('GRAPHQL_INTROSPECTION'),
+        context: ({ req, res }) => ({ req, res }), // Pasar request y response al contexto
       }),
       inject: [ConfigService],
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AppResolver],
 })
 export class AppModule {}
