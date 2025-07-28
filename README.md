@@ -1,6 +1,6 @@
 # Chat Realtime Full Stack 💬
 
-Una aplicación de chat en tiempo real construida con **React + NestJS + GraphQL + MongoDB**, diseñada para escalabilidad y desarrollo moderno.
+Una aplicación de chat en tiempo real construida con **React + NestJS + GraphQL + MongoDB**, diseñada para escalabilidad y desarrollo moderno con **patrones de arquitectura avanzados**.
 
 ![React](https://img.shields.io/badge/React-19.1.0-61DAFB?style=flat&logo=react)
 ![NestJS](https://img.shields.io/badge/NestJS-Latest-E0234E?style=flat&logo=nestjs)
@@ -9,7 +9,7 @@ Una aplicación de chat en tiempo real construida con **React + NestJS + GraphQL
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.8.3-3178C6?style=flat&logo=typescript)
 ![Material-UI](https://img.shields.io/badge/Material--UI-7.2.0-0081CB?style=flat&logo=mui)
 ![Docker](https://img.shields.io/badge/Docker-Latest-2496ED?style=flat&logo=docker)
-![Vite](https://img.shields.io/badge/Vite-7.0.4-646CFF?style=flat&logo=vite)
+![Vite](https://img.shields.io/badge/Vite-7.0.6-646CFF?style=flat&logo=vite)
 
 ## 🚀 Características
 
@@ -18,18 +18,24 @@ Una aplicación de chat en tiempo real construida con **React + NestJS + GraphQL
 - 🎨 **Interfaz moderna** con Material-UI y tema oscuro
 - 📱 **Diseño responsivo** que se adapta a cualquier dispositivo
 - 🔧 **TypeScript** para un desarrollo más seguro y mantenible
+- 🔄 **GraphQL Client** con Apollo Client para estado eficiente
 
-### Backend (NestJS + GraphQL)
-- 🚀 **API GraphQL** para consultas eficientes y flexibles
-- 🔒 **Arquitectura modular** con NestJS
-- 🔄 **Tiempo real** con subscripciones GraphQL
-- 📊 **Base de datos MongoDB** con Docker
+### Backend (NestJS + GraphQL + Arquitectura Avanzada)
+- 🚀 **API GraphQL** con Apollo Server para consultas eficientes
+- 🏗️ **Abstract Repository Pattern** para operaciones CRUD reutilizables
+- 🔒 **Abstract Entity Pattern** con decoradores GraphQL + MongoDB
+- 📊 **Schema auto-generado** desde entidades TypeScript
+- 🔄 **Tiempo real** con subscripciones GraphQL (próximamente)
+- 🎯 **Arquitectura modular** y escalable con NestJS
+- 🛡️ **Validación automática** con Class Validator
+- 📝 **GraphQL Playground** integrado para desarrollo
 
-### DevOps & Tooling
+### Base de Datos & DevOps
 - 🐳 **Docker** para desarrollo y producción
+- 🗄️ **MongoDB 7.0** con inicialización automática
 - 🛠️ **Docker Compose** para orquestación de servicios
-- 🎯 **ESLint & Prettier** para calidad de código
-- 📝 **Mongo Express** para administración de base de datos
+- � **Mongo Express** para administración visual
+- 🔧 **Variables de entorno** configuradas automáticamente
 
 ## 🛠️ Stack tecnológico
 
@@ -42,17 +48,20 @@ Una aplicación de chat en tiempo real construida con **React + NestJS + GraphQL
 
 ### Backend
 - **NestJS** - Framework de Node.js para APIs escalables
-- **GraphQL** - Lenguaje de consultas para APIs flexibles
+- **GraphQL + Apollo Server** - Lenguaje de consultas con servidor integrado
+- **Abstract Repository Pattern** - Patrón para operaciones CRUD genéricas
+- **Abstract Entity Pattern** - Entidades base con GraphQL + MongoDB
+- **Class Validator** - Validación automática de datos
 - **TypeScript** - Desarrollo tipado y seguro
-- **Class Validator** - Validación de datos
 
 ### Base de datos
 - **MongoDB 7.0** - Base de datos NoSQL orientada a documentos
+- **Mongoose** - ODM para MongoDB con esquemas tipados
 - **Mongo Express** - Interfaz web para administración de MongoDB
 
 ### DevOps
 - **Docker & Docker Compose** - Containerización y orquestación
-- **ESLint & Prettier** - Linting y formateo de código
+- **Variables de entorno** - Configuración automática
 
 ## 📦 Instalación y configuración
 
@@ -87,8 +96,9 @@ Una aplicación de chat en tiempo real construida con **React + NestJS + GraphQL
 
 4. **Accede a las aplicaciones**
    - **Frontend**: http://localhost:5173
-   - **Backend GraphQL**: http://localhost:3000/graphql
-   - **Admin de BD**: http://localhost:8081
+   - **Backend GraphQL Playground**: http://localhost:3000/graphql
+   - **Backend API**: http://localhost:3000
+   - **Admin MongoDB**: http://localhost:8081
 
 ### 🔧 Configuración manual por pasos
 
@@ -159,11 +169,23 @@ chat-realtime-vite-nest-graphql/
 │
 ├── 📁 chatter-backend/         # Backend NestJS + GraphQL
 │   ├── src/
-│   │   ├── app.controller.ts  # Controlador principal
-│   │   ├── app.module.ts      # Módulo raíz
-│   │   ├── app.service.ts     # Servicio principal
+│   │   ├── common/             # Módulos compartidos
+│   │   │   └── database/       # Patrones de base de datos
+│   │   │       ├── abstract.entity.ts    # Entidad base GraphQL+MongoDB
+│   │   │       ├── abstract.repository.ts # Repository pattern genérico
+│   │   │       └── database.module.ts     # Configuración de BD
+│   │   ├── users/              # Módulo de usuarios
+│   │   │   ├── entities/       # Entidades GraphQL
+│   │   │   ├── user.repository.ts # Repository específico
+│   │   │   ├── users.resolver.ts  # Resolvers GraphQL
+│   │   │   ├── users.service.ts   # Lógica de negocio
+│   │   │   └── users.module.ts    # Configuración del módulo
+│   │   ├── app.controller.ts   # Controlador principal
+│   │   ├── app.module.ts       # Módulo raíz
+│   │   ├── app.service.ts      # Servicio principal
 │   │   └── main.ts            # Punto de entrada
 │   ├── test/                  # Tests del backend
+│   ├── .env                   # Variables de entorno
 │   ├── package.json           # Dependencias del backend
 │   ├── nest-cli.json          # Config NestJS
 │   ├── tsconfig.json          # Config TypeScript
@@ -175,6 +197,82 @@ chat-realtime-vite-nest-graphql/
 ├── 📦 package.json            # Scripts y deps del monorepo
 ├── 🚫 .gitignore              # Archivos ignorados por Git
 └── 📖 README.md               # Este archivo
+```
+
+## 🏗️ Arquitectura del Proyecto
+
+### 🎯 **Patrones de Diseño Implementados**
+
+#### **1. Abstract Repository Pattern**
+Patrón genérico para operaciones CRUD que elimina código duplicado:
+
+```typescript
+// Repositorio base con operaciones comunes
+export abstract class AbstractRepository<T extends AbstractEntity> {
+    async create(document: Omit<T, '_id'>): Promise<T>
+    async findOne(filterQuery: FilterQuery<T>): Promise<T | null>
+    async findOneAndUpdate(filterQuery, update): Promise<T>
+    async find(filterQuery): Promise<T[]>
+    async findOneAndDelete(filterQuery): Promise<T>
+}
+
+// Uso específico por entidad
+export class UserRepository extends AbstractRepository<User> {
+    // Hereda todos los métodos CRUD + métodos específicos de User
+}
+```
+
+#### **2. Abstract Entity Pattern**
+Entidad base que combina MongoDB con GraphQL automáticamente:
+
+```typescript
+@Schema()                    // Para MongoDB
+@ObjectType({ isAbstract: true }) // Para GraphQL
+export abstract class AbstractEntity {
+  @Prop({ type: SchemaTypes.ObjectId })
+  @Field(() => ID)           // Expuesto en GraphQL
+  _id: Types.ObjectId;
+}
+
+// Las entidades heredan ambas funcionalidades
+@ObjectType()
+export class User extends AbstractEntity {
+  @Field() @Prop()
+  name: string;
+}
+```
+
+#### **3. Module Pattern**
+Arquitectura modular de NestJS con inyección de dependencias:
+
+```typescript
+@Module({
+  imports: [DatabaseModule.forFeature([User])],
+  providers: [UsersService, UserRepository, UsersResolver],
+  exports: [UsersService],
+})
+export class UsersModule {}
+```
+
+### 🔄 **Flujo de Datos**
+
+```
+Frontend (React) 
+    ↓ GraphQL Query/Mutation
+Backend (NestJS Resolver)
+    ↓ Service Layer
+Repository Pattern
+    ↓ Mongoose ODM
+MongoDB Database
+```
+
+### 📊 **Integración GraphQL**
+
+1. **Schema Auto-generado**: Las entidades TypeScript generan automáticamente el schema GraphQL
+2. **Playground Integrado**: Interfaz visual para probar queries en desarrollo
+3. **Type Safety**: Tipos compartidos entre frontend y backend
+4. **Resolvers Modulares**: Cada entidad tiene sus propios resolvers
+
 ```
 
 ## 🐳 Docker y base de datos
@@ -197,10 +295,71 @@ El proyecto está configurado para funcionar sin variables de entorno adicionale
 
 Para más detalles sobre Docker, consulta [DOCKER.md](./DOCKER.md).
 
-## 🔗 Conexiones API
+## 🔗 API GraphQL
 
 ### GraphQL Playground
-Accede al playground de GraphQL en: http://localhost:3000/graphql
+Accede al playground interactivo en: **http://localhost:3000/graphql**
+
+### 📝 **Ejemplos de Queries**
+
+#### Obtener todos los usuarios:
+```graphql
+query GetUsers {
+  users {
+    _id
+    name
+    email
+  }
+}
+```
+
+#### Obtener un usuario específico:
+```graphql
+query GetUser {
+  user(id: "65a1b2c3d4e5f6789abcdef0") {
+    _id
+    name
+    email
+  }
+}
+```
+
+#### Crear un nuevo usuario:
+```graphql
+mutation CreateUser {
+  createUser(createUserInput: {
+    name: "Juan Pérez"
+    email: "juan@example.com"
+  }) {
+    _id
+    name
+    email
+  }
+}
+```
+
+### 🔧 **Schema Generado Automáticamente**
+
+El schema GraphQL se genera automáticamente desde las entidades TypeScript:
+
+```graphql
+type User {
+  _id: ID!
+  name: String!
+  email: String!
+}
+
+type Query {
+  users: [User!]!
+  user(id: ID!): User
+}
+
+type Mutation {
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(id: ID!, updateUserInput: UpdateUserInput!): User!
+  removeUser(id: ID!): User!
+}
+```
 
 ### Conexión a MongoDB
 ```typescript
@@ -271,21 +430,71 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más det
 
 ## 🔧 Desarrollo avanzado
 
-### Agregar nuevas funcionalidades GraphQL
-1. Crea resolvers en `chatter-backend/src/`
-2. Define esquemas GraphQL
-3. Actualiza el frontend para consumir las nuevas queries/mutations
+### 🏗️ **Agregar nuevas entidades**
 
-### Configuración de producción
-- Variables de entorno para MongoDB production
-- Build de Docker para deploy
-- Configuración de CORS para dominios específicos
+1. **Crear la entidad** extendiendo AbstractEntity:
+```typescript
+@ObjectType()
+@Schema()
+export class Message extends AbstractEntity {
+  @Field() @Prop()
+  text: string;
 
-### Testing
+  @Field() @Prop()
+  userId: string;
+}
+```
+
+2. **Crear el repository** extendiendo AbstractRepository:
+```typescript
+export class MessageRepository extends AbstractRepository<Message> {
+  protected readonly logger = new Logger(MessageRepository.name);
+  
+  // Métodos específicos de Message si son necesarios
+}
+```
+
+3. **Crear service y resolver**:
+```typescript
+@Resolver(() => Message) 
+export class MessageResolver {
+  @Query(() => [Message])
+  async messages() { /* ... */ }
+  
+  @Mutation(() => Message)
+  async createMessage() { /* ... */ }
+}
+```
+
+### 🚀 **Deployment y Producción**
+
+#### Variables de entorno para producción:
 ```bash
-# Tests del backend
+# Backend .env
+MONGODB_URI=mongodb://user:pass@your-mongo-host:27017/chatter
+PORT=3000
+NODE_ENV=production
+```
+
+#### Build de contenedores Docker:
+```bash
+# Build para producción
+docker build -t chatter-backend ./chatter-backend
+docker build -t chatter-frontend ./chatter-ui
+```
+
+### 🧪 **Testing**
+
+```bash
+# Tests del backend con Jest
 cd chatter-backend && npm run test
 
-# Tests del frontend  
-cd chatter-ui && npm run test
+# Tests unitarios
+cd chatter-backend && npm run test:unit
+
+# Tests de integración
+cd chatter-backend && npm run test:e2e
+
+# Coverage de tests
+cd chatter-backend && npm run test:cov
 ```
