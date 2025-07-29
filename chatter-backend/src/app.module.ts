@@ -7,10 +7,33 @@ import { DatabaseModule } from './common/database/database.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { UsersModule } from './users/users.module';
+import { LoggerModule } from 'nestjs-pino';
 import * as Joi from 'joi';
 
 @Module({
   imports: [
+    LoggerModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        pinoHttp: {
+          level: configService.get<string>('LOG_LEVEL', 'info'),
+          transport: configService.get<string>('NODE_ENV') === 'development' ? {
+            target: 'pino-pretty',
+            options: {
+              singleLine: true,
+              colorize: true,
+              translateTime: 'SYS:standard',
+              ignore: 'pid,hostname',
+            },
+          } : undefined,
+          redact: {
+            paths: ['req.headers.authorization', 'req.headers.cookie'],
+            censor: '***HIDDEN***',
+          },
+        },
+      }),
+      inject: [ConfigService],
+    }),
     ConfigModule.forRoot({
       isGlobal: true, // Hace que las variables de entorno estén disponibles en toda la aplicación
       validationSchema: Joi.object({
