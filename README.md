@@ -29,6 +29,7 @@ Una aplicación de chat en tiempo real construida con **React + NestJS + GraphQL
 - 🎯 **Arquitectura modular** y escalable con NestJS
 - 🛡️ **Validación automática** con Class Validator
 - 📝 **GraphQL Playground** integrado para desarrollo
+- 📊 **Pino Logger** para logging estructurado y de alto rendimiento
 
 ### Base de Datos & DevOps
 - 🐳 **Docker** para desarrollo y producción
@@ -52,6 +53,7 @@ Una aplicación de chat en tiempo real construida con **React + NestJS + GraphQL
 - **Abstract Repository Pattern** - Patrón para operaciones CRUD genéricas
 - **Abstract Entity Pattern** - Entidades base con GraphQL + MongoDB
 - **Class Validator** - Validación automática de datos
+- **Pino Logger** - Sistema de logging estructurado y de alto rendimiento
 - **TypeScript** - Desarrollo tipado y seguro
 
 ### Base de datos
@@ -282,13 +284,22 @@ Este proyecto utiliza **Docker** para gestionar MongoDB de forma sencilla y cons
 ### Configuración de MongoDB
 - **Puerto**: 27017
 - **Base de datos**: chatter
-- **Usuario**: chatter_user
-- **Contraseña**: chatter_password
+- **Usuario administrador**: admin / password123
+- **Usuario de aplicación**: chatter_user / chatter_password
+
+### Conexión con Mongo Compass
+```bash
+# Opción 1: Usuario administrador (recomendado para desarrollo)
+mongodb://admin:password123@localhost:27017/chatter?authSource=admin
+
+# Opción 2: Usuario de aplicación
+mongodb://chatter_user:chatter_password@localhost:27017/chatter
+```
 
 ### Mongo Express (Interfaz web)
 - **URL**: http://localhost:8081
 - **Usuario admin**: admin
-- **Contraseña admin**: pass
+- **Contraseña admin**: admin123
 
 ### Variables de entorno
 El proyecto está configurado para funcionar sin variables de entorno adicionales. La configuración de Docker está en `docker-compose.yml` y la inicialización de la base de datos en `init-mongo.js`.
@@ -363,8 +374,66 @@ type Mutation {
 
 ### Conexión a MongoDB
 ```typescript
-// String de conexión para el backend
+// String de conexión para el backend (configuración actual)
 mongodb://chatter_user:chatter_password@localhost:27017/chatter
+```
+
+## 📊 Sistema de Logging (Pino)
+
+Este proyecto utiliza **Pino** como sistema de logging de alto rendimiento, que ofrece mejor rendimiento y características más avanzadas que el logger nativo de NestJS.
+
+### 🚀 **Características del Logger**
+
+- **Alto rendimiento**: Hasta 5x más rápido que el logger nativo
+- **Logs estructurados**: Formato JSON para producción
+- **Formato pretty**: Logs legibles con colores en desarrollo
+- **Redacción automática**: Oculta información sensible (headers de auth, cookies)
+- **Nivel configurable**: Configurable desde variables de entorno
+- **Timestamps automáticos**: Con zona horaria incluida
+
+### 🔧 **Configuración**
+
+El sistema está configurado automáticamente en `app.module.ts` con diferentes configuraciones para desarrollo y producción:
+
+**Desarrollo:**
+```bash
+[2025-07-29 16:24:15.963 -0300] INFO: 🚀 Servidor iniciado en http://localhost:3000 {"context":"Bootstrap"}
+```
+
+**Producción:**
+```json
+{"level":30,"time":1643723055963,"pid":1234,"hostname":"server","context":"Bootstrap","msg":"🚀 Servidor iniciado en http://localhost:3000"}
+```
+
+### 📝 **Uso en servicios**
+
+```typescript
+import { PinoLogger, InjectPinoLogger } from 'nestjs-pino';
+
+@Injectable()
+export class UsersService {
+  constructor(
+    @InjectPinoLogger(UsersService.name)
+    private readonly logger: PinoLogger,
+  ) {}
+
+  async findAll() {
+    this.logger.info('Obteniendo todos los usuarios');
+    this.logger.debug('Query ejecutada', { query: 'db.users.find()' });
+    // Tu lógica aquí
+  }
+}
+```
+
+### ⚙️ **Variables de entorno**
+
+```bash
+# Nivel de logging: error, warn, info, debug
+LOG_LEVEL=debug
+
+# Entorno (afecta el formato de logs)
+NODE_ENV=development  # pretty format
+NODE_ENV=production   # JSON format
 ```
 
 ## 🎨 Personalización
@@ -474,6 +543,11 @@ export class MessageResolver {
 MONGODB_URI=mongodb://user:pass@your-mongo-host:27017/chatter
 PORT=3000
 NODE_ENV=production
+LOG_LEVEL=info
+CORS_ORIGIN=https://your-frontend-domain.com
+JWT_SECRET=your-secure-jwt-secret-for-production
+GRAPHQL_PLAYGROUND=false
+GRAPHQL_INTROSPECTION=false
 ```
 
 #### Build de contenedores Docker:
