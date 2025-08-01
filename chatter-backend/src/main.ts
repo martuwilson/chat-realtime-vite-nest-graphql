@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 import { Logger } from 'nestjs-pino';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
@@ -13,6 +14,9 @@ async function bootstrap() {
   
   const configService = app.get(ConfigService);
   const logger = app.get(Logger);
+
+  // Configurar cookie-parser para manejar cookies
+  app.use(cookieParser());
 
   // Configurar CORS
   const corsOrigin = configService.get<string>('CORS_ORIGIN')?.split(',') || ['http://localhost:5173'];
