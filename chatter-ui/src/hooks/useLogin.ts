@@ -7,7 +7,7 @@ interface LoginRequest {
 }
 
 const useLogin = () => {
-  const [error, setError] = useState<boolean>();
+  const [error, setError] = useState<string>();
 
   const login = async (request: LoginRequest) => {
     const response = await fetch(
@@ -22,12 +22,19 @@ const useLogin = () => {
     );
 
     if (!response.ok) {
+
+        if(response.status === 401) {
+            setError('Credentials are invalid');
+        } else {
+            setError('An unexpected error occurred. Please try again later.');
+        }
+
         const errorData = await response.json();
         setError(errorData.message);
         return;
     }
 
-    setError(false);
+    setError("");
     await client.refetchQueries({
         include: 'active', // Refresca las queries activas para obtener el usuario autenticado
     })

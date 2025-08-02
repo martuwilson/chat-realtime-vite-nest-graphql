@@ -11,7 +11,8 @@ const Login = () => {
 
     return (
         <>
-        <Auth submitLabel="Log In" onSubmit={async (request) => { await login(request); }}>
+        <Auth submitLabel="Log In" onSubmit={async (request) => { await login(request); }}
+        error={error}>
             <Link to="/signup" style={{ alignSelf: 'center' }}>
             <MuiLink>Don't have an account? Sign Up</MuiLink>
             </Link>

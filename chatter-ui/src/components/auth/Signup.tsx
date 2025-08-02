@@ -3,23 +3,37 @@ import { Link } from "react-router-dom";
 import { Link as MuiLink } from "@mui/material";
 import Auth from "./Auth";
 import { useCreateUser } from "../../hooks/useCreateUser";
+import { useState } from "react";
+import { ExtractErrorMessage } from "../../utils/error";
 
 
 const SignUp = () => {
 
     const [createUser] = useCreateUser();
+    const [error, setError] = useState("");
 
     return (
         <>
-        <Auth submitLabel="Sign Up" onSubmit={async ({email, password}) => {
-            await createUser({
-                variables: {
-                    createUserInput: {
-                        email: email,
-                        password: password
+        <Auth submitLabel="Sign Up" error={error} onSubmit={async ({email, password}) => {
+
+            try {
+                await createUser({
+                    variables: {
+                        createUserInput: {
+                            email: email,
+                            password: password
+                        }
                     }
+                });
+                setError("");
+            } catch (err) {
+                const errorMessage = ExtractErrorMessage(err);
+                if (errorMessage) {
+                    setError(errorMessage);
+                    return;
                 }
-            });
+                setError("An unexpected error occurred. Please try again later.");
+            }
         }}>
             <Link to="/login" style={{ alignSelf: 'center' }}>
             <MuiLink>Already have an account? Log In</MuiLink>

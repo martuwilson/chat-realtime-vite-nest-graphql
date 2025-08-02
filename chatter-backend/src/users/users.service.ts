@@ -11,10 +11,20 @@ export class UsersService {
 
 
   async create(createUserInput: CreateUserInput) {
-    return this.userRepository.create({
+
+    try {
+      return this.userRepository.create({
       ...createUserInput,
       password: await this.hashPassword(createUserInput.password),
     });
+    } catch (error) {
+      if (error.message.includes('E11000')) { 
+        throw new UnauthorizedException('Email already exists');
+      }
+      throw error;
+      
+    }
+    
   }
 
   private async hashPassword(password: string) {
