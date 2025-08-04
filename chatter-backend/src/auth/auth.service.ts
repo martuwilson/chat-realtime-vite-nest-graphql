@@ -30,4 +30,11 @@ export class AuthService {
 
         return { user: { email: user.email } };
     }
+
+    async logout(response: Response) {
+        // Limpiar la cookie de autenticación
+        response.clearCookie('Authentication');
+        
+        return { message: 'Logout successful' };
+    }
 }
