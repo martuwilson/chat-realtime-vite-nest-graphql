@@ -1,31 +1,45 @@
 import { type JSX } from "react";
-import { useGetMe } from "../../hooks/useGetMe";
+import { useLocation } from "react-router-dom";
+import { useAuthRedirect } from "../../hooks/useAuthRedirect";
 import EXCLUDE_ROUTES from "../../constants/exclude-routes";
+import { CircularProgress, Box } from "@mui/material";
 
 interface GuardProps {
     children: JSX.Element;
 }
 
 const Guard = ({ children }: GuardProps) => {
-    const { data: user } = useGetMe();
+    const location = useLocation();
+    const isPublicRoute = EXCLUDE_ROUTES.includes(location.pathname);
+    
+    // Para rutas públicas, usar redirect inverso (redirige si YA está autenticado)
+    // Para rutas privadas, usar redirect normal (redirige si NO está autenticado)
+    const { loading } = useAuthRedirect({
+        requireAuth: !isPublicRoute,
+        redirectTo: isPublicRoute ? '/home' : '/login'
+    });
 
-    // Mantener un log simple para confirmar que la autenticación funciona
-    if (user?.me) {
-        console.log("✅ User authenticated:", user.me.email);
+    // Mantener log simple para debugging
+    /* if (isAuthenticated) {
+        console.log("✅ Usuario autenticado accediendo a:", location.pathname);
+    } */
+
+    // Mostrar loading mientras verifica autenticación
+    if (loading) {
+        return (
+            <Box 
+                display="flex" 
+                justifyContent="center" 
+                alignItems="center" 
+                minHeight="100vh"
+            >
+                <CircularProgress />
+            </Box>
+        );
     }
-    
-    // TODO: Implementar lógica de redirección y protección de rutas
-    // if (loading) return <div>Loading...</div>;
-    // if (error || !user?.me) return <Navigate to="/login" />;
-    
-    return (
-        <>
-            {
-                EXCLUDE_ROUTES.includes(window.location.pathname)
-                ? children : user && <>{children}</>
-            }
-        </>
-    );
+
+    // Si llegamos aquí, el usuario tiene los permisos correctos para la ruta
+    return children;
 };
 
 export default Guard;

@@ -1,5 +1,5 @@
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Auth from "./Auth";
 import { useCreateUser } from "../../hooks/useCreateUser";
 import { useState } from "react";
@@ -10,6 +10,7 @@ const SignUp = () => {
 
     const [createUser] = useCreateUser();
     const [error, setError] = useState("");
+    const navigate = useNavigate();
 
     return (
         <>
@@ -25,6 +26,11 @@ const SignUp = () => {
                     }
                 });
                 setError("");
+                
+                // Redirigir a login después del registro exitoso
+                console.log("✅ Registro exitoso, redirigiendo a /login");
+                navigate("/login", { replace: true });
+                
             } catch (err) {
                 const errorMessage = ExtractErrorMessage(err);
                 if (errorMessage) {
