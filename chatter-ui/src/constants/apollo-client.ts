@@ -5,17 +5,15 @@ import { GRAPHQL_URL } from './urls';
 // Crear el link HTTP para GraphQL
 const httpLink = createHttpLink({
     uri: GRAPHQL_URL,
+    credentials: 'include', // Importante: incluye cookies en las requests
 });
 
-// Crear el link de autenticación para agregar JWT token
+// Crear el link de autenticación (ya no necesario para JWT en cookies)
 const authLink = setContext((_, { headers }) => {
-    // Obtener el token del localStorage si existe
-    const token = localStorage.getItem(import.meta.env.VITE_JWT_STORAGE_KEY || 'chatter_token');
-    
     return {
         headers: {
             ...headers,
-            authorization: token ? `Bearer ${token}` : "",
+            // Las cookies se envían automáticamente con credentials: 'include'
         }
     }
 });

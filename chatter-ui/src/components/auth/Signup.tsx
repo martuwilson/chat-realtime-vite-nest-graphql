@@ -1,6 +1,5 @@
 
 import { Link } from "react-router-dom";
-import { Link as MuiLink } from "@mui/material";
 import Auth from "./Auth";
 import { useCreateUser } from "../../hooks/useCreateUser";
 import { useState } from "react";
@@ -35,8 +34,16 @@ const SignUp = () => {
                 setError("An unexpected error occurred. Please try again later.");
             }
         }}>
-            <Link to="/login" style={{ alignSelf: 'center' }}>
-            <MuiLink>Already have an account? Log In</MuiLink>
+            <Link 
+                to="/login" 
+                style={{ 
+                    alignSelf: 'center',
+                    textDecoration: 'none',
+                    color: '#1976d2',
+                    fontSize: '0.875rem'
+                }}
+            >
+                Already have an account? Log In
             </Link>
         </Auth>
         </>

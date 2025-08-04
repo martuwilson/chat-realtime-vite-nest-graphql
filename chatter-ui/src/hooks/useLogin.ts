@@ -17,6 +17,7 @@ const useLogin = () => {
             headers: {
             "Content-Type": "application/json",
             },
+            credentials: 'include', // IMPORTANTE: Para enviar/recibir cookies
             body: JSON.stringify(request),
         }
     );

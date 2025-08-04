@@ -28,6 +28,6 @@ export class AuthService {
             expires: expires
         });
 
-        return response.send({ user: { email: user.email } });
+        return { user: { email: user.email } };
     }
 }
